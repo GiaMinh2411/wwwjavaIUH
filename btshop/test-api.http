@@ -1,0 +1,107 @@
+### ==============================================================================
+### ĐẦY ĐỦ CÁC TEST CASES THEO ĐÚNG TÀI LIỆU HƯỚNG DẪN (CHẠY TRỰC TIẾP TRÊN INTELLIJ)
+### ==============================================================================
+
+### [CƠ BẢN 1] Lấy danh sách tất cả sản phẩm
+GET http://localhost:8080/btshop/api/products
+Accept: application/json
+
+### [CƠ BẢN 1] Lấy chi tiết sản phẩm theo ID
+GET http://localhost:8080/btshop/api/products/1
+Accept: application/json
+
+### [CƠ BẢN 1] Thêm sản phẩm mới (POST)
+POST http://localhost:8080/btshop/api/products
+Content-Type: application/json
+
+{
+  "name": "AirPods Pro 2",
+  "price": 249.0,
+  "description": "Active Noise Cancellation",
+  "imageUrl": "https://picsum.photos/id/11/400/400"
+}
+
+### [CƠ BẢN 1] Cập nhật thông tin sản phẩm (PUT)
+PUT http://localhost:8080/btshop/api/products/1
+Content-Type: application/json
+
+{
+  "name": "iPhone 15 Pro Max",
+  "price": 1199.0,
+  "description": "Updated description",
+  "imageUrl": "https://picsum.photos/id/1/400/400"
+}
+
+### [CƠ BẢN 2] Lấy tất cả giỏ hàng
+GET http://localhost:8080/btshop/api/carts
+Accept: application/json
+
+### [CƠ BẢN 2] Lấy chi tiết giỏ hàng theo ID
+GET http://localhost:8080/btshop/api/carts/2
+Accept: application/json
+
+### [CƠ BẢN 2] Thêm mục giỏ hàng thông thường (POST)
+POST http://localhost:8080/btshop/api/carts
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "customerName": "Vu Thi Mai",
+  "quantity": 3
+}
+
+### [CƠ BẢN 2] Cập nhật giỏ hàng (PUT)
+PUT http://localhost:8080/btshop/api/carts/2
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "customerName": "Tran Thi B",
+  "quantity": 5
+}
+
+### ==============================================================================
+### 5 NGHIỆP VỤ NÂNG CAO (YÊU CẦU 1 -> YÊU CẦU 5)
+### ==============================================================================
+
+### 1. [YÊU CẦU 1] Tính tổng hóa đơn giỏ hàng của một khách hàng (Customer Cart Bill Breakdown)
+### Nếu tổng tiền > $2,000 thì giảm 10%
+GET http://localhost:8080/btshop/api/carts/bill/Nguyen%20Van%20A
+Accept: application/json
+
+### [YÊU CẦU 1] Test với khách hàng có chiết khấu (> $2,000): Tran Thi B
+GET http://localhost:8080/btshop/api/carts/bill/Tran%20Thi%20B
+Accept: application/json
+
+### 2. [YÊU CẦU 2] Thêm sản phẩm vào giỏ hàng có kiểm tra Value Cap (HỢP LỆ <= $5,000)
+POST http://localhost:8080/btshop/api/carts/add-with-cap
+Content-Type: application/json
+
+{
+  "productId": 3,
+  "customerName": "Sinh Vien Test",
+  "quantity": 2
+}
+
+### [YÊU CẦU 2] Thêm sản phẩm vào giỏ hàng (BỊ CHẶN VÌ VƯỢT QUÁ $5,000 -> HTTP 400)
+POST http://localhost:8080/btshop/api/carts/add-with-cap
+Content-Type: application/json
+
+{
+  "productId": 3,
+  "customerName": "Sinh Vien Test",
+  "quantity": 10
+}
+
+### 3. [YÊU CẦU 3] Điều chỉnh giá hàng loạt theo doanh số giỏ hàng (Dynamic Repricing by Popularity)
+### >= 5 đơn: +10%, 0 đơn: -5%
+PUT http://localhost:8080/btshop/api/products/dynamic-pricing
+Accept: application/json
+
+### 4. [YÊU CẦU 4] Chuyển đổi toàn bộ giỏ hàng thành Đơn đặt mua và Xóa giỏ (Checkout & Clear Cart)
+POST http://localhost:8080/btshop/api/carts/checkout/Le%20Van%20C
+Accept: application/json
+
+### 5. [YÊU CẦU 5] Thống kê Doanh thu dự kiến & Đóng góp % từng sản phẩm (Revenue Share Analytics)
+GET http://localhost:8080/btshop/api/products/analytics/revenue-share
+Accept: application/json
